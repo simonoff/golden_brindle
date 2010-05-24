@@ -1,6 +1,20 @@
 = golden_brindle
 
-Description goes here.
+== Golden Brindle
+
+Tool to help start/stop/restart multiple unicorn servers to use behind a web servers like nginx. This app adds an option to specify a number of Unicorn worker processes to launch, a range of ports, and a configuration file for the cluster. Use "-h" to see command syntax.
+
+Configure cluster and write configuration file:
+  golden_brindle brindle::configure  
+
+Start cluster:
+  golden_brindle brindle::start
+
+Restart cluster:
+  golden_brindle brindle::restart
+
+Stop cluster:
+  golden_brindle brindle::stop
 
 == Note on Patches/Pull Requests
  
@@ -15,3 +29,5 @@ Description goes here.
 == Copyright
 
 Copyright (c) 2010 Alexander Simonov. See LICENSE for details.
+Copyright (c) 2007 Zed A. Shaw
+Copyright (c) 2006 Bradley Taylor, bradley@fluxura.com
