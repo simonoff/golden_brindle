@@ -98,7 +98,7 @@ module Brindle
       end
 
       @cwd = File.expand_path(@cwd)
-      valid_dir? @cwd, "Invalid path to change to during daemon mode: #@cwd"
+      return false unless valid_dir? @cwd, "Invalid path to change to during daemon mode: #@cwd"
 
       # Change there to start, then we'll have to come back after daemonize
       Dir.chdir(@cwd)
