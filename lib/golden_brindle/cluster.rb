@@ -17,7 +17,8 @@ module Cluster
         confs =  Dir.glob("*.yml")
         confs += Dir.glob("*.conf")
         confs.each do |conf|
-          cmd = "golden_brindle #{command} -C #{conf} -d"
+          cmd = "golden_brindle #{command} -C #{conf}"
+          cmd += " -d" if command == "start" #demonize only when start
           puts cmd if @verbose 
           output = `#{cmd}`
           puts output if @verbose
