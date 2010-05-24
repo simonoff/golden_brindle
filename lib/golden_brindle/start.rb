@@ -133,7 +133,7 @@ module Brindle
           # trying to change user and group
           begin
             # check if something not set in config or cli
-            unless @user.nil? || group.nil?
+            unless @user.nil? || @group.nil?
               uid, gid = Process.euid, Process.egid
               user, group = @user, @group
               target_uid = Etc.getpwnam(user).uid
@@ -146,7 +146,7 @@ module Brindle
               end
             end
            rescue => e
-             if RAILS_ENV == 'development'
+             if ENV['RAILS_ENV'] == 'development'
                STDERR.puts "couldn't change user, oh well"
              else
                raise e
@@ -171,9 +171,9 @@ module Brindle
           options[:listeners] << "#{@address}:#{port}"
         end
       end
-      unless @listen.nil?
+      unless @listen.nil? || @listen.empty?
         @listen.split(',').each do |listen|
-          listen = File.join(@cwd,listen) if listen[0..0] != "/"
+          listen = File.join(@cwd,listen) if listen[0..0] != "/" && !listen.match(/\w+\:\w+/)
           options[:listeners] << "#{listen}"
         end
       end
