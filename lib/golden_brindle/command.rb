@@ -1,9 +1,18 @@
 module GoldenBrindle
   
+  
+  def GoldenBrindle::send_signal(signal, pid_file)
+    pid = open(pid_file).read.to_i
+    print "Sending #{signal} to Unicorn at PID #{pid}..."
+    begin
+      Process.kill(signal, pid)
+    rescue Errno::ESRCH
+      puts "Process does not exist.  Not running."
+    end
+    puts "Done."
+  end
+  
   module Command
-    
-    # main banner
-    BANNER = "Usage: golden_brindle <command> [options]"
     
     module Base
       
@@ -22,12 +31,13 @@ module GoldenBrindle
         end
       end
       
+      
       # Called by the subclass to setup the command and parse the argv arguments.
       # The call is destructive on argv since it uses the OptionParser#parse! function.
       def initialize(options={})
         argv = options[:argv] || []
         @opt = OptionParser.new
-        @opt.banner = GoldenBrindle::Command::BANNER
+        @opt.banner = GoldenBrindle::Const::BANNER
         @valid = true
         # this is retarded, but it has to be done this way because -h and -v exit
         @done_validating = false
@@ -54,6 +64,32 @@ module GoldenBrindle
 
       def configure
         options []
+      end
+      
+      def config_keys
+        @config_keys ||=
+          %w(address host port cwd log_file pid_file environment servers daemon debug config_script num_workers timeout user group prefix preload listen)
+      end
+      
+      def load_config
+        settings = {}
+        begin
+          settings = YAML.load_file(@config_file)
+        ensure
+          STDERR.puts "** Loading settings from #{@config_file} (they override command line)." unless @daemon || settings[:daemon] 
+        end
+
+        # Config file settings will override command line settings
+        settings.each do |key, value|
+          key = key.to_s
+          if config_keys.include?(key)
+            key = 'address' if key == 'host'
+            self.instance_variable_set("@#{key}", value)
+          else
+            failure "Unknown configuration setting: #{key}"  
+            @valid = false
+          end
+        end
       end
 
       # Returns true/false depending on whether the command is configured properly.
@@ -139,7 +175,7 @@ module GoldenBrindle
 
       # Prints a list of available commands.
       def print_command_list
-        puts "#{GoldenBrindle::Command::BANNER}\nAvailable commands are:\n\n"
+        puts "#{GoldenBrindle::Const::BANNER}\nAvailable commands are:\n\n"
 
         self.commands.each do |name|
           if /brindle::/ =~ name
@@ -169,11 +205,9 @@ module GoldenBrindle
         end
 
         begin
-          # quick hack so that existing commands will keep working but the Mongrel:: ones can be moved
-          if ["start", "stop", "restart"].include? cmd_name
+          if ["start", "stop", "restart", "configure", "reload"].include? cmd_name
             cmd_name = "brindle::" + cmd_name
           end
-
           command = GemPlugin::Manager.instance.create("/commands/#{cmd_name}", :argv => args)
         rescue OptionParser::InvalidOption
           STDERR.puts "#$! for command '#{cmd_name}'"
