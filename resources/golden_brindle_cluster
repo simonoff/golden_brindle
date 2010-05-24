@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Copyright (c) 2010 Alexander Simonov, alex@simonov.me
+#
+# golden_brindle_cluster       Startup script for GoldenBrindle clusters.
+#
+# chkconfig: - 85 15
+# description: golden_brindle_cluster manages multiple Unicorn/GoldenBrindle processes for use \
+#              behind a cluster.
+#              
+
+CONF_DIR=/etc/brindles
+USER=www
+
+RETVAL=0
+
+which golden_brindle >/dev/null || exit 0
+
+[ -d "$CONF_DIR" ] || exit 0
+
+case "$1" in
+    start)
+      # Create pid directory
+      golden_brindle cluster::start -c $CONF_DIR
+      RETVAL=$?
+  ;;
+    stop)
+      golden_brindle cluster::stop -c $CONF_DIR
+      RETVAL=$?
+  ;;
+    restart)
+      golden_brindle cluster::restart -c $CONF_DIR
+      RETVAL=$?
+  ;;
+    *)
+      echo "Usage: golden_brindle_cluster {start|stop|restart|status}"
+      exit 1
+  ;;
+esac      
+
+exit $RETVAL
