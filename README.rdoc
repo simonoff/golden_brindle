@@ -5,7 +5,7 @@
 Tool to help start/stop/restart multiple unicorn servers to use behind a web servers like nginx. This app adds an option to specify a number of Unicorn worker processes to launch, a range of ports, and a configuration file for the cluster. Use "-h" to see command syntax.
 
 Configure cluster and write configuration file:
-  golden_brindle brindle::configure  
+  golden_brindle brindle::configure  (NOT implemented yet)
 
 Start cluster:
   golden_brindle brindle::start
@@ -15,6 +15,15 @@ Restart cluster:
 
 Stop cluster:
   golden_brindle brindle::stop
+
+
+== Starting clusters at boot
+
+1. Create golden_brindle conf directory (/etc/brindles).
+2. Assign ownership to your Capistrano user.
+3. Copy the init.d script from this gem's resouces directory /etc/init.d.
+4. chmod +x /etc/init.d/golden_brindles_cluster
+5. Add to init.d startup. On RHEL/CentOS use: /sbin/chkconfig --level 345 golden_brindles_cluster on
 
 == Note on Patches/Pull Requests
  
