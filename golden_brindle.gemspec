@@ -16,7 +16,8 @@ Gem::Specification.new do |s|
   s.executables = ["golden_brindle"]
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.rdoc"
+     "README.rdoc",
+     "TODO"
   ]
   s.files = [
     ".document",
@@ -25,15 +26,19 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.rdoc",
      "Rakefile",
+     "TODO",
      "VERSION",
      "bin/golden_brindle",
+     "golden_brindle.gemspec",
      "lib/golden_brindle.rb",
+     "lib/golden_brindle/cluster.rb",
      "lib/golden_brindle/command.rb",
      "lib/golden_brindle/configure.rb",
      "lib/golden_brindle/const.rb",
      "lib/golden_brindle/restart.rb",
      "lib/golden_brindle/start.rb",
      "lib/golden_brindle/stop.rb",
+     "resources/golden_brindle_cluster",
      "test/helper.rb",
      "test/test_golden_brindle.rb"
   ]
