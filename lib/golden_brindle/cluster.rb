@@ -7,7 +7,7 @@ module Cluster
     def configure 
       options [ 
         ["-c", "--conf_path PATH", "Path to golden_brindle configuration files", :@cwd, "."],
-        ["-V", "", "Verbose output", :@verbose, "."]
+        ["-V", "", "Verbose output", :@verbose, false]
       ]
     end
     
@@ -17,8 +17,7 @@ module Cluster
         confs =  Dir.glob("*.yml")
         confs += Dir.glob("*.conf")
         confs.each do |conf|
-          cmd = "golden_brindle #{command} -C #{conf}"
-          cmd += " -v" if @verbose
+          cmd = "golden_brindle #{command} -C #{conf} -d"
           puts cmd if @verbose 
           output = `#{cmd}`
           puts output if @verbose
