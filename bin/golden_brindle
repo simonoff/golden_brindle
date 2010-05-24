@@ -1,0 +1,12 @@
+require 'rubygems'
+require 'gem_plugin'
+require 'unicorn'
+
+$LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
+require 'golden_brindle'
+
+GemPlugin::Manager.instance.load "golden_brindle" => GemPlugin::INCLUDE
+
+if not GoldenBrindle::Command::Registry.instance.run ARGV
+  exit 1
+end
