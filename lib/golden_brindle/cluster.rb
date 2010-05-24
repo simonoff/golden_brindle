@@ -17,12 +17,12 @@ module Cluster
         confs =  Dir.glob("*.yml")
         confs += Dir.glob("*.conf")
         confs.each do |conf|
-          cmd = "golden_brindle cluster::#{command} -C #{conf}"
+          cmd = "golden_brindle #{command} -C #{conf}"
           cmd += " -v" if @verbose
           puts cmd if @verbose 
           output = `#{cmd}`
           puts output if @verbose
-          puts "golden_brindle cluster::#{command} returned an error." unless $?.success?     
+          puts "golden_brindle #{command} returned an error." unless $?.success?     
         end
       end
     end
