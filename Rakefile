@@ -13,7 +13,7 @@ begin
     gem.authors = ["Alexander Simonov"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_dependency "gem_plugin", ">= 0.2.3"
-    gem.add_dependency "unicorn", ">= 0.9.9"
+    gem.add_dependency "unicorn", ">= 0.99"
     gem.version = GoldenBrindle::Const::VERSION
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
