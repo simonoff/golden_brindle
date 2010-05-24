@@ -133,9 +133,14 @@ module GoldenBrindle
       def valid_dir?(file, message)
         valid?(file != nil && File.directory?(file), message)
       end
+      
+      def can_change_user?
+          valid?(Process.euid.to_i == 0,"if you want to change workers UID/GID you must run script from root")
+      end
 
       def valid_user?(user)
         valid?(@group, "You must also specify a group.")
+        can_change_user?
         begin
           Etc.getpwnam(user)
         rescue

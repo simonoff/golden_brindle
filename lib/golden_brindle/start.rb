@@ -96,10 +96,9 @@ module Brindle
         valid_exists?(@config_script, "Unicorn-specific config file not there: #@config_script")
         return false unless @valid
       end
-
       @cwd = File.expand_path(@cwd)
-      return false unless valid_dir? @cwd, "Invalid path to change to during daemon mode: #@cwd"
-
+      valid_dir? @cwd, "Invalid path to change to during daemon mode: #@cwd"
+      return false unless @valid
       # Change there to start, then we'll have to come back after daemonize
       Dir.chdir(@cwd)
 
@@ -108,7 +107,6 @@ module Brindle
       valid_dir? File.dirname(@pid_file), "Path to pid file not valid: #@pid_file"
       valid_user? @user if @user
       valid_group? @group if @group
-
       return @valid
     end
     
