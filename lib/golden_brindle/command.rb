@@ -68,7 +68,7 @@ module GoldenBrindle
       
       def config_keys
         @config_keys ||=
-          %w(address host port cwd log_file pid_file environment servers daemon debug config_script num_workers timeout user group prefix preload listen)
+          %w(address host port cwd log_file pid_file environment servers daemon debug config_script workers timeout user group prefix preload listen)
       end
       
       def load_config
