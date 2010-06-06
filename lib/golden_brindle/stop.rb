@@ -16,22 +16,19 @@ module Brindle
     def validate
       if @config_file
         valid_exists?(@config_file, "Config file not there: #@config_file")
-        return false unless @valid
         @config_file = File.expand_path(@config_file)
         load_config
-        return false unless @valid
+        return @valid
       end
       
       @cwd = File.expand_path(@cwd)
       valid_dir? @cwd, "Invalid path to change to during daemon mode: #@cwd"
-      return false unless @valid
-      Dir.chdir @cwd
-
-      valid_exists? @pid_file, "PID file #@pid_file does not exist.  Not running?"
+      valid_exists? File.join(@cwd,@pid_file), "PID file #@pid_file does not exist.  Not running?"
       return @valid
     end
 
     def run
+      @pid_file = File.join(@cwd,@pid_file)
       if @force
         @wait.to_i.times do |waiting|
           exit(0) if not File.exist? @pid_file
