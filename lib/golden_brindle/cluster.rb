@@ -11,8 +11,16 @@ module Cluster
       ]
     end
     
+    def validate
+      @cwd = File.expand_path(@cwd)
+      valid_dir? @cwd, "Invalid path to golden_brindle configuration files: #{@cwd}"
+      return false unless @valid
+    end
+
     def run
       command = self.class.to_s.downcase.split('::')[1]
+      counter = 0
+      errors = 0
       Dir.chdir @cwd do
         confs =  Dir.glob("*.yml")
         confs += Dir.glob("*.conf")
@@ -22,9 +30,13 @@ module Cluster
           puts cmd if @verbose 
           output = `#{cmd}`
           puts output if @verbose
-          puts "golden_brindle #{command} returned an error." unless $?.success?     
+          status = $?.success?
+          puts "golden_brindle #{command} returned an error." unless status
+          counter += 1 if status
+          errors += 1 unless status
         end
       end
+      puts "Success:#{counter}; Errors: #{errors}"
     end
     
   end
