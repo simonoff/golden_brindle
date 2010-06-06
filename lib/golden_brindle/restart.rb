@@ -22,19 +22,16 @@ module Brindle
       end
       
       @cwd = File.expand_path(@cwd)
-      valid_dir? @cwd, "Invalid path to change to during daemon mode: #@cwd"
-      return false unless @valid
-      Dir.chdir @cwd
-
-      valid_exists? @pid_file, "PID file #@pid_file does not exist.  Not running?"
+      valid_dir? @cwd, "Invalid path to application dir: #@cwd"
+      valid_exists? File.join(@cwd,@pid_file), "PID file #@pid_file does not exist.  Not running?"
       return @valid
     end
 
     def run
       if @soft
-        GoldenBrindle::send_signal("HUP", @pid_file)
+        GoldenBrindle::send_signal("HUP", File.join(@cwd,@pid_file))
       else
-        GoldenBrindle::send_signal("USR2", @pid_file)
+        GoldenBrindle::send_signal("USR2", File.join(@cwd,@pid_file))
       end
     end
     
