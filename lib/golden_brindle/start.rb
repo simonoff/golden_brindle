@@ -97,20 +97,18 @@ module Brindle
         return false unless @valid
       end
       @cwd = File.expand_path(@cwd)
-      valid_dir? @cwd, "Invalid path to change to during daemon mode: #@cwd"
-      return false unless @valid
-      # Change there to start, then we'll have to come back after daemonize
-      Dir.chdir(@cwd)
-
+      valid_dir? @cwd, "Invalid path to change to during daemon mode: #{@cwd}"
       valid?(@prefix[0] == ?/ && @prefix[-1] != ?/, "Prefix must begin with / and not end in /") if @prefix
-      valid_dir? File.dirname(@log_file), "Path to log file not valid: #@log_file"
-      valid_dir? File.dirname(@pid_file), "Path to pid file not valid: #@pid_file"
+      valid_dir? File.dirname(File.join(@cwd,@log_file)), "Path to log file not valid: #{@log_file}"
+      valid_dir? File.dirname(File.join(@cwd,@pid_file)), "Path to pid file not valid: #{@pid_file}"
       valid_user? @user if @user
       valid_group? @group if @group
       return @valid
     end
     
     def run
+      # Change there to start, then we'll have to come back after daemonize
+      Dir.chdir(@cwd)
       options = { :listeners => []}
       options[:pid] = @pid_file
       options[:config_file] = @config_script
@@ -181,6 +179,7 @@ module Brindle
       if @daemon
         Unicorn::Launcher.daemonize!(options)
       end
+      puts "start Unicorn..."
       Unicorn.run(app, options)
     end
     
