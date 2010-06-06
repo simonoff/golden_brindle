@@ -1,5 +1,6 @@
 require 'gem_plugin'
 require 'optparse'
+require 'yaml'
 require 'unicorn'
 require 'unicorn/launcher'
 require 'golden_brindle/const'
