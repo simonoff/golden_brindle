@@ -13,8 +13,8 @@ module Cluster
     
     def validate
       @cwd = File.expand_path(@cwd)
-      valid_dir? @cwd, "Invalid path to golden_brindle configuration files: #{@cwd}"
-      return false unless @valid
+      valid_dir? @cwd, "Invalid path to golden_brindle configuration files: #@cwd"
+      return @valid
     end
 
     def run
