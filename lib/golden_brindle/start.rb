@@ -27,12 +27,36 @@ module Brindle
       ]
     end
     
+    
+    #
+    # Rails 3 dispatcher support
+    # Code from unicorn_rails script
+    #
+    def rails_dispatcher
+      if ::Rails::VERSION::MAJOR >= 3 && ::File.exist?('config/application.rb')
+        if ::File.read('config/application.rb') =~ /^module\s+([\w:]+)\s*$/
+          app_module = Object.const_get($1)
+          begin
+            result = app_module::Application
+          rescue NameError
+          end
+        end
+      end
+
+      if result.nil? && defined?(ActionController::Dispatcher)
+        result = ActionController::Dispatcher.new
+      end
+
+      result || abort("Unable to locate the application dispatcher class")
+    end
+    
     def rails_builder(daemonize)
       # this lambda won't run until after forking if preload_app is false
       lambda do ||
         # Load Rails
         begin
-          require 'config/boot'
+          require ::File.expand_path('config/boot')
+          require ::File.expand_path('config/environment')
         rescue LoadError => err
           abort "#$0 must be run inside RAILS_ROOT: #{err.inspect}"
         end
@@ -42,48 +66,43 @@ module Brindle
         defined?(::Rails::VERSION::STRING) or
           abort "Rails::VERSION::STRING not defined by config/{boot,environment}"
         # it seems Rails >=2.2 support Rack, but only >=2.3 requires it
-        old_rails = case ::Rails::VERSION::MAJOR
-        when 0, 1 then true
-        when 2 then Rails::VERSION::MINOR < 3 ? true : false
-        else
+        old_rails = if ::Rails::VERSION::MAJOR >= 3
           false
-        end
-
-        inner_app = if old_rails
-          require 'unicorn/app/old_rails'
-          Unicorn::App::OldRails.new
         else
-          ActionController::Dispatcher.new
+          return false if ( ::Rails::VERSION::MAJOR == 2 && ::Rails::VERSION::MINOR >= 3 )  
+          true
         end
 
         Rack::Builder.new do
           map_path = ENV['RAILS_RELATIVE_URL_ROOT'] || '/'
-          if inner_app.class.to_s == "Unicorn::App::OldRails"
+          if old_rails
             if map_path != '/'
               # patches + tests welcome, but I really cbf to deal with this
               # since all apps I've ever dealt with just use "/" ...
-              $stderr.puts "relative URL roots may not work for older Rails"
+              warn "relative URL roots may not work for older Rails"
             end
-            $stderr.puts "LogTailer not available for Rails < 2.3" unless daemonize
-            $stderr.puts "Debugger not available" if $DEBUG
+            warn "LogTailer not available for Rails < 2.3" unless daemonize
+            warn "Debugger not available" if $DEBUG
+            require 'unicorn/app/old_rails'
             map(map_path) do
               use Unicorn::App::OldRails::Static
-              run inner_app
+              run Unicorn::App::OldRails.new
             end
           else
             use Rails::Rack::LogTailer unless daemonize
             use Rails::Rack::Debugger if $DEBUG
             map(map_path) do
-              use Rails::Rack::Static
-              run inner_app
+              unless defined?(ActionDispatch::Static)
+                use Rails::Rack::Static
+              end
+              run rails_dispatcher
             end
           end
         end.to_app
       end
     end  
     
-    def validate
-      
+    def validate    
       if @config_file
         valid_exists?(@config_file, "Config file not there: #@config_file")
         return false unless @valid
@@ -112,7 +131,7 @@ module Brindle
       options = { :listeners => []}
       options[:pid] = @pid_file
       options[:config_file] = @config_script
-      options[:worker_processes] = @workers
+      options[:worker_processes] = @workers.to_i
       options[:working_directory] = @cwd
       options[:timeout] = @timeout
       # set user via Unicorn options. If we don't set group - then use only user
