@@ -32,7 +32,7 @@ module Brindle
     # Rails 3 dispatcher support
     # Code from unicorn_rails script
     #
-    def rails_dispatcher
+    def self.rails_dispatcher
       if ::Rails::VERSION::MAJOR >= 3 && ::File.exist?('config/application.rb')
         if ::File.read('config/application.rb') =~ /^module\s+([\w:]+)\s*$/
           app_module = Object.const_get($1)
@@ -66,11 +66,11 @@ module Brindle
         defined?(::Rails::VERSION::STRING) or
           abort "Rails::VERSION::STRING not defined by config/{boot,environment}"
         # it seems Rails >=2.2 support Rack, but only >=2.3 requires it
-        old_rails = if ::Rails::VERSION::MAJOR >= 3
-          false
+        old_rails = case ::Rails::VERSION::MAJOR
+        when 0, 1 then true
+        when 2 then Rails::VERSION::MINOR < 3 ? true : false
         else
-          return false if ( ::Rails::VERSION::MAJOR == 2 && ::Rails::VERSION::MINOR >= 3 )  
-          true
+          false
         end
 
         Rack::Builder.new do
@@ -95,7 +95,7 @@ module Brindle
               unless defined?(ActionDispatch::Static)
                 use Rails::Rack::Static
               end
-              run rails_dispatcher
+              run Brindle::Start.rails_dispatcher
             end
           end
         end.to_app
@@ -128,12 +128,14 @@ module Brindle
     def run
       # Change there to start, then we'll have to come back after daemonize
       Dir.chdir(@cwd)
-      options = { :listeners => []}
-      options[:pid] = @pid_file
-      options[:config_file] = @config_script
-      options[:worker_processes] = @workers.to_i
-      options[:working_directory] = @cwd
-      options[:timeout] = @timeout
+      options = { 
+        :listeners          => [],
+        :pid                => @pid_file,
+        :config_file        => @config_script,
+        :worker_processes   => @workers.to_i,
+        :working_directory  => @cwd,
+        :timeout            => @timeout
+      }
       # set user via Unicorn options. If we don't set group - then use only user
       options[:user] = @user unless @user.nil? 
       options[:stderr_path] = options[:stdout_path] = @log_file if @daemon
@@ -148,34 +150,41 @@ module Brindle
         defined?(ActiveRecord::Base) and
           ActiveRecord::Base.establish_connection
           # trying to change user and group
-          begin
-            # check if something not set in config or cli
-            unless @user.nil? || @group.nil?
-              uid, gid = Process.euid, Process.egid
-              user, group = @user, @group
-              target_uid = Etc.getpwnam(user).uid
-              target_gid = Etc.getgrnam(group).gid
-              worker.tmp.chown(target_uid, target_gid)
-              if uid != target_uid || gid != target_gid
-                Process.initgroups(user, target_gid)
-                Process::GID.change_privilege(target_gid)
-                Process::UID.change_privilege(target_uid)
-              end
+        begin
+          # check if something not set in config or cli
+          unless @user.nil? || @group.nil?
+            uid, gid = Process.euid, Process.egid
+            user, group = @user, @group
+            target_uid = Etc.getpwnam(user).uid
+            target_gid = Etc.getgrnam(group).gid
+            worker.tmp.chown(target_uid, target_gid)
+            if uid != target_uid || gid != target_gid
+              Process.initgroups(user, target_gid)
+              Process::GID.change_privilege(target_gid)
+              Process::UID.change_privilege(target_uid)
             end
-           rescue => e
-             if ENV['RAILS_ENV'] == 'development'
-               STDERR.puts "couldn't change user, oh well"
-             else
-               raise e
-             end
+          end
+         rescue => e
+           if ENV['RAILS_ENV'] == 'development'
+             STDERR.puts "couldn't change user, oh well"
+           else
+             raise e
            end
+         end
       end   
       options[:before_fork] = lambda do |server, worker| 
         defined?(ActiveRecord::Base) and
           ActiveRecord::Base.connection.disconnect!
         # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
         if GC.respond_to?(:copy_on_write_friendly=)
-          	GC.copy_on_write_friendly = true
+            GC.copy_on_write_friendly = true
+        end
+        old_pid = "#{server.config[:pid]}.oldbin"
+        if File.exists?(old_pid) && server.pid != old_pid
+          begin
+            Process.kill("QUIT", File.read(old_pid).to_i)
+          rescue Errno::ENOENT, Errno::ESRCH
+          end
         end
       end
       ENV['RAILS_ENV'] = @environment

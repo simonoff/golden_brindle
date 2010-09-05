@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{golden_brindle}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Simonov"]
-  s.date = %q{2010-07-01}
+  s.date = %q{2010-09-05}
   s.default_executable = %q{golden_brindle}
   s.description = %q{Unicorn HTTP server clustering tool like mongrel_cluster for Mongrel}
   s.email = %q{alex@simonov.me}
