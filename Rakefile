@@ -6,12 +6,11 @@ begin
   require File.dirname(__FILE__) + "/lib/golden_brindle/const.rb"
   Jeweler::Tasks.new do |gem|
     gem.name = "golden_brindle"
-    gem.summary = %Q{Unicorn HTTP server clustering tool like mongrel_cluster for Mongrel}
-    gem.description = %Q{Unicorn HTTP server clustering tool like mongrel_cluster for Mongrel}
+    gem.summary = %Q{Unicorn HTTP server multiple application runner tool}
+    gem.description = %Q{Unicorn HTTP server multiple application runner tool}
     gem.email = "alex@simonov.me"
     gem.homepage = "http://github.com/simonoff/golden_brindle"
     gem.authors = ["Alexander Simonov"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
     gem.add_dependency "gem_plugin", ">= 0.2.3"
     gem.add_dependency "unicorn", ">= 1.00"
     gem.version = GoldenBrindle::Const::VERSION

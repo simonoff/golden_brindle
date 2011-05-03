@@ -4,26 +4,34 @@
 
 Tool to help start/stop/restart multiple unicorn servers to use behind a web servers like nginx. This app adds an option to specify a number of Unicorn worker processes to launch, a range of ports, and a configuration file for the cluster. Use "-h" to see command syntax.
 
-Configure cluster and write configuration file:
+Configure cluster and save configuration file to config/brindle.yml:
   golden_brindle brindle::configure
 
-Start cluster:
-  golden_brindle brindle::start
+You must copy this configuration file to the /etc/brindles directory to autostart on system boot.
 
-Restart cluster:
-  golden_brindle brindle::restart
+Start by hand to test proper start:
+  golden_brindle start
 
-Stop cluster:
-  golden_brindle brindle::stop
+Reload source code after deploy or code update:
+  golden_brindle restart
 
+Stop:
+  golden_brindle stop
+
+== Using applications with bundler
+
+Open brindle config file for the application and set bundler option to true:
+  bundler: true
+And update you Gemfile adding this line:
+  gem 'golden_brindle'
 
 == Starting clusters at boot
 
-1. Create golden_brindle conf directory (/etc/brindles).
+1. Create golden_brindle configuration directory (/etc/brindles).
 2. Assign ownership to your Capistrano user.
-3. Copy the init.d script from this gem's resouces directory /etc/init.d.
+3. Copy the init.d script from this gem's resouces directory to /etc/init.d.
 4. chmod +x /etc/init.d/golden_brindles_cluster
-5. Add to init.d startup. On RHEL/CentOS use: /sbin/chkconfig --level 345 golden_brindles_cluster on
+5. Add to init.d startup. On RHEL/CentOS use: /sbin/chkconfig --level 345 golden_brindles on
 
 == Note on Patches/Pull Requests
  
@@ -31,13 +39,13 @@ Stop cluster:
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
   future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
+* Commit, do not mess with Rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
 == Copyright
 
-Copyright (c) 2010 Alexander Simonov. See LICENSE for details.
+Copyright (c) 2010-2011 Alexander Simonov. See LICENSE for details.
 
 Copyright (c) 2007 Zed A. Shaw
 

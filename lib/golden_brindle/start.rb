@@ -7,6 +7,7 @@ module Brindle
     def configure
       options [
         ["-e", "--environment ENV", "Rails environment to run as", :@environment, ENV['RAILS_ENV'] || "development"],
+        ["-b", "--bundler", "Use bundler to start unicorn instances", :@bundler, false],
         ["-d", "--daemonize", "Run daemonized in the background", :@daemon, false],
         ['', "--preload", "Preload application", :@preload, false],
         ['-p', '--port PORT', "Which port to bind to (if set numbers of servers - start port number)", :@port, Unicorn::Const::DEFAULT_PORT],
@@ -61,8 +62,6 @@ module Brindle
           abort "#$0 must be run inside RAILS_ROOT: #{err.inspect}"
         end
 
-        require 'config/environment'
-
         defined?(::Rails::VERSION::STRING) or
           abort "Rails::VERSION::STRING not defined by config/{boot,environment}"
         # it seems Rails >=2.2 support Rack, but only >=2.3 requires it
@@ -115,6 +114,12 @@ module Brindle
         valid_exists?(@config_script, "Unicorn-specific config file not there: #@config_script")
         return false unless @valid
       end
+      
+      if @bundler
+        valid_exists?('Gemfile', "Cannot use Bundler - no Gemfile in your application root dir")
+        return false unless @valid
+      end
+      
       @cwd = File.expand_path(@cwd)
       valid_dir? @cwd, "Invalid path to change to during daemon mode: #{@cwd}"
       valid?(@prefix[0] == ?/ && @prefix[-1] != ?/, "Prefix must begin with / and not end in /") if @prefix
@@ -128,6 +133,16 @@ module Brindle
     def run
       # Change there to start, then we'll have to come back after daemonize
       Dir.chdir(@cwd)
+      if @bundler
+        puts "Using Bundler"
+        puts "reexec via bundle exec"
+        require 'pp'
+        cmd_for_exec = "bundle exec #{@opt.program_name}"
+        @original_args.each_slice(2) do |arg_key,value|
+          cmd_for_exec << " #{arg_key} #{value}" if arg_key != "-b"
+        end
+        exec(cmd_for_exec)
+      end
       options = { 
         :listeners          => [],
         :pid                => @pid_file,

@@ -7,6 +7,7 @@ module Brindle
         options [
           ["-e", "--environment ENV", "Rails environment to run as", :@environment, ENV['RAILS_ENV'] || "development"],
           ["-d", "--daemonize", "Run daemonized in the background", :@daemon, false],
+          ["-b", "--bundler", "Use bundler to start unicorn instances", :@bundler, false],
           ['', "--preload", "Preload application", :@preload, false],
           ['-p', '--port PORT', "Which port to bind to (if set numbers of servers - start port number)", :@port, Unicorn::Const::DEFAULT_PORT],
           ['-a', '--address ADDR', "Address to bind to", :@address, Unicorn::Const::DEFAULT_HOST],

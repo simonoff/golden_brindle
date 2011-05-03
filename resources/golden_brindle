@@ -2,10 +2,10 @@
 #
 # Copyright (c) 2010 Alexander Simonov, alex@simonov.me
 #
-# golden_brindle_cluster       Startup script for GoldenBrindle clusters.
+# golden_brindle       Startup script for GoldenBrindle.
 #
 # chkconfig: - 85 15
-# description: golden_brindle_cluster manages multiple Unicorn/GoldenBrindle processes for use \
+# description: golden_brindle manages multiple Unicorn/GoldenBrindle processes for use \
 #              behind a cluster.
 #              
 
@@ -33,7 +33,7 @@ case "$1" in
       RETVAL=$?
   ;;
     *)
-      echo "Usage: golden_brindle_cluster {start|stop|restart|status}"
+      echo "Usage: golden_brindle {start|stop|restart|status}"
       exit 1
   ;;
 esac      
