@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
      "lib/golden_brindle/restart.rb",
      "lib/golden_brindle/start.rb",
      "lib/golden_brindle/stop.rb",
-     "resources/golden_brindle_cluster",
+     "resources/golden_brindle",
      "test/helper.rb",
      "test/test_golden_brindle.rb"
   ]
