@@ -149,7 +149,7 @@ module Brindle
         :config_file        => @config_script,
         :worker_processes   => @workers.to_i,
         :working_directory  => @cwd,
-        :timeout            => @timeout
+        :timeout            => @timeout.to_i
       }
       # set user via Unicorn options. If we don't set group - then use only user
       options[:user] = @user unless @user.nil? 
