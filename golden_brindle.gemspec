@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Simonov"]
-  s.date = %q{2011-05-04}
+  s.date = %q{2011-09-02}
   s.default_executable = %q{golden_brindle}
   s.description = %q{Unicorn HTTP server multiple application runner tool}
   s.email = %q{alex@simonov.me}
@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
     "TODO"
   ]
   s.files = [
-    ".document",
     "COPYING",
     "LICENSE",
     "README.rdoc",
