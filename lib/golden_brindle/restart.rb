@@ -24,7 +24,7 @@ module Brindle
       @cwd = File.expand_path(@cwd)
       valid_dir? @cwd, "Invalid path to application dir: #@cwd"
       valid_exists? File.join(@cwd,@pid_file), "PID file #@pid_file does not exist.  Not running?"
-      return @valid
+      @valid
     end
 
     def run

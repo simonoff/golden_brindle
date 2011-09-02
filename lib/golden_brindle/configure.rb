@@ -32,7 +32,7 @@ module Brindle
       valid_dir? File.dirname(@config_file), "Path to config file not valid: #{@config_file}"
       
       if @config_script
-        valid_exists?(@config_script, "Unicorn-specific config file not there: #@config_script")
+        valid_exists?(@config_script, "Unicorn-specific config file not there: #{@config_script}")
         return false unless @valid
       end
 
@@ -41,7 +41,7 @@ module Brindle
       valid_dir? File.dirname(@pid_file), "Path to pid file not valid: #@pid_file"
       valid_user? @user if @user
       valid_group? @group if @group
-      return @valid
+      @valid
     end
     
     def run

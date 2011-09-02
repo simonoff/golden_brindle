@@ -7,7 +7,7 @@ module GoldenBrindle
     begin
       Process.kill(signal, pid)
     rescue Errno::ESRCH
-      puts "Process does not exist.  Not running."
+      puts "Process does not exist. Not running."
     end
     puts "Done."
   end
@@ -30,8 +30,7 @@ module GoldenBrindle
           end
         end
       end
-      
-      
+
       # Called by the subclass to setup the command and parse the argv arguments.
       # The call is destructive on argv since it uses the OptionParser#parse! function.
       def initialize(options={})
@@ -42,9 +41,7 @@ module GoldenBrindle
         # this is retarded, but it has to be done this way because -h and -v exit
         @done_validating = false
         @original_args = argv.dup
-
         configure
-
         # I need to add my own -h definition to prevent the -h by default from exiting.
         @opt.on_tail("-h", "--help", "Show this message") do
           @done_validating = true
@@ -58,7 +55,6 @@ module GoldenBrindle
             puts "Version #{GoldenBrindle::Const::VERSION}"
           end
         end
-
         @opt.parse! argv
       end
 
@@ -94,7 +90,7 @@ module GoldenBrindle
 
       # Returns true/false depending on whether the command is configured properly.
       def validate
-        return @valid
+        @valid
       end
 
       # Returns a help message.  Defaults to OptionParser#help which should be good.
@@ -108,10 +104,9 @@ module GoldenBrindle
         raise NotImplementedError
       end
 
-
       # Validates the given expression is true and prints the message if not, exiting.
       def valid?(exp, message)
-        if not @done_validating and (not exp)
+        if !@done_validating && !exp
           failure message
           @valid = false
           @done_validating = true
@@ -120,22 +115,21 @@ module GoldenBrindle
 
       # Validates that a file exists and if not displays the message
       def valid_exists?(file, message)
-        valid?(file != nil && File.exist?(file), message)
+        valid?(File.exist?(file), message)
       end
-
 
       # Validates that the file is a file and not a directory or something else.
       def valid_file?(file, message)
-        valid?(file != nil && File.file?(file), message)
+        valid?(File.file?(file), message)
       end
 
       # Validates that the given directory exists
       def valid_dir?(file, message)
-        valid?(file != nil && File.directory?(file), message)
+        valid?(File.directory?(file), message)
       end
       
       def can_change_user?
-          valid?(Process.euid.to_i == 0,"if you want to change workers UID/GID you must run script from root")
+        valid?(Process.euid.to_i == 0, "if you want to change workers UID/GID you must run script from root")
       end
 
       def valid_user?(user)
@@ -175,7 +169,7 @@ module GoldenBrindle
       def commands
         pmgr = GemPlugin::Manager.instance
         list = pmgr.plugins["/commands"].keys
-        return list.sort
+        list.sort
       end
 
       # Prints a list of available commands.
@@ -227,16 +221,16 @@ module GoldenBrindle
         # Normally the command is NOT valid right after being created
         # but sometimes (like with -h or -v) there's no further processing
         # needed so the command is already valid so we can skip it.
-        if not command.done_validating
-          if not command.validate
-            STDERR.puts "#{cmd_name} reported an error. Use goldent_brindle #{cmd_name} -h to get help."
+        if !command.done_validating
+          if !command.validate
+            STDERR.puts "#{cmd_name} reported an error. Use golden_brindle #{cmd_name} -h to get help."
             return false
           else
             command.run
           end
         end
 
-        return true
+        true
       end
     end
     

@@ -13,8 +13,8 @@ module Cluster
     
     def validate
       @cwd = File.expand_path(@cwd)
-      valid_dir? @cwd, "Invalid path to golden_brindle configuration files: #@cwd"
-      return @valid
+      valid_dir? @cwd, "Invalid path to golden_brindle configuration files: #{@cwd}"
+      @valid
     end
 
     def run
@@ -22,9 +22,7 @@ module Cluster
       counter = 0
       errors = 0
       Dir.chdir @cwd do
-        confs =  Dir.glob("*.yml")
-        confs += Dir.glob("*.conf")
-        confs.each do |conf|
+        Dir.glob("**/*.{yml,conf}").each do |conf|
           cmd = "golden_brindle #{command} -C #{conf}"
           cmd += " -d" if command == "start" #daemonize only when start
           puts cmd if @verbose 
@@ -32,8 +30,7 @@ module Cluster
           puts output if @verbose
           status = $?.success?
           puts "golden_brindle #{command} returned an error." unless status
-          counter += 1 if status
-          errors += 1 unless status
+          status ? counter += 1 : errors += 1
         end
       end
       puts "Success:#{counter}; Errors: #{errors}"
@@ -43,7 +40,6 @@ module Cluster
   
   class Start < GemPlugin::Plugin "/commands"
     include Cluster::Base
-    
   end
   
   class Stop < GemPlugin::Plugin "/commands"
