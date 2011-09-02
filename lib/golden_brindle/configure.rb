@@ -19,7 +19,7 @@ module Brindle
           ['-t', '--timeout INT', "Time to wait (in seconds) before killing a stalled thread", :@timeout, 60],
           ['-c', '--chdir PATH', "Change to dir before starting (will be expanded)", :@cwd, Dir.pwd],
           ['-D', '--debug', "Enable debugging mode", :@debug, false],
-          ['-C', '--config PATH', "Path to brindle configuration file", :@config_file, "config/brindle.yml"],
+          ['-C', '--config PATH', "Path to brindle configuration file", :@config_file, GoldenBrindle::Const::DEFAULT_CONFIG],
           ['-S', '--script PATH', "Load the Unicorn-specific config file", :@config_script, nil],
           ['', '--user USER', "User to run as", :@user, nil],
           ['', '--group GROUP', "Group to run as", :@group, nil],
