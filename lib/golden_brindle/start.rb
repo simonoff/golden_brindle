@@ -28,7 +28,7 @@ module Brindle
       ]
     end
     
-    
+
     #
     # Rails 3 dispatcher support
     # Code from unicorn_rails script
@@ -102,7 +102,7 @@ module Brindle
     end  
     
     def validate    
-      if @config_file || valid_exists?(GoldenBrindle::Const::DEFAULT_CONFIG, "Default config file not found")
+      if @config_file || File.exists?(GoldenBrindle::Const::DEFAULT_CONFIG)
         @config_file = GoldenBrindle::Const::DEFAULT_CONFIG if @config_file.nil?
 				valid_exists?(@config_file, "Config file not there: #@config_file")
         return false unless @valid

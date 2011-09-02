@@ -14,7 +14,7 @@ module Brindle
     end
 
     def validate
-      if @config_file || valid_exists?(GoldenBrindle::Const::DEFAULT_CONFIG, "Default config file not found")
+      if @config_file || File.exists?(GoldenBrindle::Const::DEFAULT_CONFIG)
         @config_file = GoldenBrindle::Const::DEFAULT_CONFIG if @config_file.nil?
         valid_exists?(@config_file, "Config file not there: #@config_file")
         @config_file = File.expand_path(@config_file)
