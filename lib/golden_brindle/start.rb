@@ -12,12 +12,12 @@ module Brindle
         ['', "--preload", "Preload application", :@preload, false],
         ['-p', '--port PORT', "Which port to bind to (if set numbers of servers - start port number)", :@port, Unicorn::Const::DEFAULT_PORT],
         ['-a', '--address ADDR', "Address to bind to", :@address, Unicorn::Const::DEFAULT_HOST],
-        ['-o', '--listen {HOST:PORT|PATH}',"listen on HOST:PORT or PATH, separeted by comma (default: #{Unicorn::Const::DEFAULT_LISTEN})", :@listen, Unicorn::Const::DEFAULT_LISTEN],
+        ['-o', '--listen {HOST:PORT|PATH}',"listen on HOST:PORT or PATH, separated by comma (default: #{Unicorn::Const::DEFAULT_LISTEN})", :@listen, Unicorn::Const::DEFAULT_LISTEN],
         ['-l', '--log FILE', "Where to write log messages", :@log_file, "log/unicorn.log"],
         ['-P', '--pid FILE', "Where to write the PID", :@pid_file, "tmp/pids/unicorn.pid"],
         ['-n', '--num-workers INT', "Number of Unicorn workers", :@workers, 4],
         ['-N', '--num-servers INT', "Number of Unicorn listen records", :@servers, 1],
-        ['-t', '--timeout TIME', "Time to wait (in seconds) before killing a stalled thread", :@timeout, 60],
+        ['-t', '--timeout INT', "Time to wait (in seconds) before killing a stalled thread", :@timeout, 60],
         ['-c', '--chdir PATH', "Change to dir before starting (will be expanded)", :@cwd, Dir.pwd],
         ['-D', '--debug', "Enable debugging mode", :@debug, false],
         ['-C', '--config PATH', "Use a mongrel based config file", :@config_file, nil],
@@ -149,7 +149,7 @@ module Brindle
         :config_file        => @config_script,
         :worker_processes   => @workers.to_i,
         :working_directory  => @cwd,
-        :timeout            => @timeout
+        :timeout            => @timeout.to_i
       }
       # set user via Unicorn options. If we don't set group - then use only user
       options[:user] = @user unless @user.nil? 
