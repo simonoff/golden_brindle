@@ -223,7 +223,11 @@ module Brindle
         Unicorn::Launcher.daemonize!(options)
       end
       puts "start Unicorn..."
-      Unicorn.run(app, options)
+      if Unicorn.respond_to?(:run)
+        Unicorn.run(app, options)
+      else
+        Unicorn::HttpServer.new(app, options).start.join
+      end
     end
     
     
