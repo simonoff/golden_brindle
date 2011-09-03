@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{golden_brindle}
-  s.version = "0.1.1"
+  s.version = "0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Simonov"]
-  s.date = %q{2011-09-02}
+  s.date = %q{2011-09-03}
   s.default_executable = %q{golden_brindle}
   s.description = %q{Unicorn HTTP server multiple application runner tool}
   s.email = %q{alex@simonov.me}
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     "TODO"
   ]
   s.files = [
+    ".document",
     "COPYING",
     "LICENSE",
     "README.rdoc",
@@ -33,6 +34,8 @@ Gem::Specification.new do |s|
     "lib/golden_brindle/command.rb",
     "lib/golden_brindle/configure.rb",
     "lib/golden_brindle/const.rb",
+    "lib/golden_brindle/hooks.rb",
+    "lib/golden_brindle/rails_support.rb",
     "lib/golden_brindle/restart.rb",
     "lib/golden_brindle/start.rb",
     "lib/golden_brindle/stop.rb",
