@@ -5,6 +5,9 @@
 *.tmproj
 tmtags
 
+## RubyMine
+.idea
+
 ## EMACS
 *~
 \#*
@@ -12,6 +15,7 @@ tmtags
 
 ## VIM
 *.swp
+.backups
 
 ## PROJECT::GENERAL
 coverage
