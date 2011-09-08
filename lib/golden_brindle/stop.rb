@@ -1,7 +1,7 @@
 module Brindle
   
   class Stop < GemPlugin::Plugin "/commands"
-    include GoldenBrindle::Command::Base
+    include GoldenBrindle::Base
     
     def configure 
       options [ 

@@ -2,7 +2,7 @@
 module Cluster
   
   module Base
-    include GoldenBrindle::Command::Base
+    include GoldenBrindle::Base
     
     def configure 
       options [ 

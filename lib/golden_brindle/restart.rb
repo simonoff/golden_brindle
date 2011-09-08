@@ -1,7 +1,7 @@
 module Brindle
   
   class Restart < GemPlugin::Plugin "/commands"
-    include GoldenBrindle::Command::Base
+    include GoldenBrindle::Base
     
     def configure 
       options [ 
@@ -14,7 +14,7 @@ module Brindle
 
     def validate
       if @config_file
-        valid_exists?(@config_file, "Config file not there: #@config_file")
+        valid_exists?(@config_file, "Config file not there: #{@config_file}")
         return false unless @valid
         @config_file = File.expand_path(@config_file)
         load_config
@@ -22,8 +22,8 @@ module Brindle
       end
       
       @cwd = File.expand_path(@cwd)
-      valid_dir? @cwd, "Invalid path to application dir: #@cwd"
-      valid_exists? File.join(@cwd,@pid_file), "PID file #@pid_file does not exist.  Not running?"
+      valid_dir? @cwd, "Invalid path to application dir: #{@cwd}"
+      valid_exists? File.join(@cwd,@pid_file), "PID file #{@pid_file} does not exist. Not running?"
       @valid
     end
 

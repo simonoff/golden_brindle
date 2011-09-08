@@ -1,7 +1,7 @@
 module Brindle
   
   class Start < GemPlugin::Plugin "/commands"
-    include GoldenBrindle::Command::Base
+    include GoldenBrindle::Base
     include Hooks
     
     def configure
