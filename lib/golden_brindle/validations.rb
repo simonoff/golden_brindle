@@ -1,9 +1,6 @@
 module GoldenBrindle
   module Validations
 
-    ANSI_RED    = "\033[0;31m"
-    ANSI_RESET  = "\033[0m"
-
     # Validates the given expression is true and prints the message if not, exiting.
     def valid?(exp, message)
       if !exp
@@ -52,7 +49,7 @@ module GoldenBrindle
 
     # Just a simple method to display failure until something better is developed.
     def failure(message)
-      STDERR.puts "#{ANSI_RED}!!! * #{message}#{ANSI_RESET}"
+      STDERR.puts "#{::GoldenBrindle::Const::ANSI_RED}!!! * #{message}#{::GoldenBrindle::Const::ANSI_RESET}"
     end
 
   end

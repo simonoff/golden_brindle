@@ -1,12 +1,11 @@
 module GoldenBrindle
-  module Base
+  class Base
     include Validations
     attr_reader :valid, :done_validating, :original_args
 
     # Called by the subclass to setup the command and parse the argv arguments.
     # The call is destructive on argv since it uses the OptionParser#parse! function.
-    def initialize(options={})
-      argv = options[:argv] || []
+    def initialize(argv)
       @opt = ::OptionParser.new
       @opt.banner = GoldenBrindle::Const::BANNER
       @valid = true

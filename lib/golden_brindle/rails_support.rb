@@ -1,4 +1,4 @@
-module Brindle
+module GoldenBrindle
   class RailsSupport
     class << self
 
@@ -68,7 +68,7 @@ module Brindle
                 unless defined?(ActionDispatch::Static)
                   use Rails::Rack::Static
                 end
-                run Brindle::RailsSupport.rails_dispatcher
+                run ::GoldenBrindle::RailsSupport.rails_dispatcher
               end
             end
           end.to_app

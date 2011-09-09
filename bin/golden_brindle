@@ -1,12 +1,9 @@
 #!usr/bin/env ruby
 require 'rubygems'
-require 'gem_plugin'
 
 $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/../lib"
 require 'golden_brindle'
 
-GemPlugin::Manager.instance.load "golden_brindle" => GemPlugin::INCLUDE
-
-if not GoldenBrindle::Registry.instance.run ARGV
+if not GoldenBrindle::Registry.run ARGV
   exit 1
 end

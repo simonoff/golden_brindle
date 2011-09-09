@@ -1,5 +1,6 @@
-module Brindle
+module GoldenBrindle
   module Hooks
+
     def collect_hooks
       [:after_fork, :after_reload, :before_fork, :before_exec].inject({}) do |memo, sym|
         memo[sym] = send(sym)
