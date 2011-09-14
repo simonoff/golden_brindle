@@ -21,7 +21,7 @@ module GoldenBrindle
         errors = 0
         Dir.chdir @cwd do
           Dir.glob("**/*.{yml,conf}").each do |conf|
-            cmd = "golden_brindle #{command} -C #{conf}"
+            cmd = "golden_brindle #{command} -C #{File.join(@cwd,conf)}"
             cmd += " -d" if command == "start" #daemonize only when start
             puts cmd if @verbose
             output = `#{cmd}`
