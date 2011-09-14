@@ -1,9 +1,3 @@
-PATH
-  remote: .
-  specs:
-    golden_brindle (0.3)
-      unicorn
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -30,14 +24,13 @@ GEM
       kgio (~> 2.4)
       rack
       raindrops (~> 0.6)
-    yard (0.6.8)
+    yard (0.7.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   bundler
-  golden_brindle!
   jeweler
   rcov
   rspec
