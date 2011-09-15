@@ -114,6 +114,8 @@ module Brindle
         options[:listeners] += listeners if listeners
       end
       app = RailsSupport.rails_builder(@daemon)
+      # load the app unless we want to preload it
+      app.call unless options[:preload_app]
       if @daemon
         Unicorn::Launcher.daemonize!(options)
       end
