@@ -34,7 +34,7 @@ module GoldenBrindle
 
       def rails_builder(daemonize)
         # this lambda won't run until after forking if preload_app is false
-        lambda do
+        lambda do ||
           # Load Rails
           begin
             require ::File.expand_path('config/boot')

@@ -1,7 +1,7 @@
 module GoldenBrindle
   module Const
     # current version
-    VERSION="0.3"
+    VERSION="0.3.1"
     # main banner
     BANNER = "Usage: golden_brindle <command> [options]"
     # config options names
