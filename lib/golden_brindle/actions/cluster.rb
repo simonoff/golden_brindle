@@ -16,7 +16,7 @@ module GoldenBrindle
       end
 
       def run
-        command = self.class.to_s.downcase.split('::')[1]
+        command = self.class.to_s.downcase.split('::').last
         counter = 0
         errors = 0
         Dir.chdir @cwd do
