@@ -4,14 +4,15 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "golden_brindle"
-  s.version = "0.3.1"
+  s.name = %q{golden_brindle}
+  s.version = "0.3.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alexander Simonov"]
-  s.date = "2011-09-16"
-  s.description = "Unicorn HTTP server multiple application runner tool"
-  s.email = "alex@simonov.me"
+  s.date = %q{2011-09-22}
+  s.default_executable = %q{golden_brindle}
+  s.description = %q{Unicorn HTTP server multiple application runner tool}
+  s.email = %q{alex@simonov.me}
   s.executables = ["golden_brindle"]
   s.extra_rdoc_files = [
     "LICENSE",
@@ -47,11 +48,11 @@ Gem::Specification.new do |s|
     "spec/golden_brindle_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = "http://github.com/simonoff/golden_brindle"
+  s.homepage = %q{http://github.com/simonoff/golden_brindle}
   s.licenses = ["GPL2"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.10"
-  s.summary = "Unicorn HTTP server multiple application runner tool"
+  s.rubygems_version = %q{1.6.2}
+  s.summary = %q{Unicorn HTTP server multiple application runner tool}
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
