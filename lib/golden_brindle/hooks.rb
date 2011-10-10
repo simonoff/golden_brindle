@@ -13,6 +13,14 @@ module GoldenBrindle
         defined?(ActiveRecord::Base) and
           ActiveRecord::Base.establish_connection
           # trying to change user and group
+		if Gem.available?("amqp")
+        	require "amqp"
+        	amqp_yaml = YAML.load_file("#{@cwd}/config/amqp.yml")
+        	amqp_config = amqp_yaml[ENV['RAILS_ENV'] || 'development']
+        	amqp_config.symbolize_keys!
+
+	    	t = Thread.new {AMQP.start(amqp_config)}
+	    end
         begin
           # check if something not set in config or cli
           unless @user.nil? || @group.nil?
