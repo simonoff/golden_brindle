@@ -29,7 +29,7 @@ module GoldenBrindle
         ]
       end
 
-      def validate
+      def validate        
         if @config_file
           valid_exists?(@config_file, "Config file not there: #@config_file")
           return false unless @valid
@@ -37,6 +37,9 @@ module GoldenBrindle
           load_config
           return false unless @valid
         end
+        
+        @cwd = File.expand_path(@cwd)
+        valid_dir? @cwd, "Invalid path to change to during daemon mode: #{@cwd}"
 
         if @config_script
           valid_exists?(@config_script, "Unicorn-specific config file not there: #@config_script")
@@ -44,12 +47,10 @@ module GoldenBrindle
         end
 
         if @bundler
-          valid_exists?('Gemfile', "Cannot use Bundler - no Gemfile in your application root dir")
+          valid_exists?(File.join(@cwd,'Gemfile'), "Cannot use Bundler - no Gemfile in your application root dir")
           return false unless @valid
         end
 
-        @cwd = File.expand_path(@cwd)
-        valid_dir? @cwd, "Invalid path to change to during daemon mode: #{@cwd}"
         valid?(@prefix[0] == ?/ && @prefix[-1] != ?/, "Prefix must begin with / and not end in /") if @prefix
         valid_dir? File.dirname(File.join(@cwd,@log_file)), "Path to log file not valid: #{@log_file}"
         valid_dir? File.dirname(File.join(@cwd,@pid_file)), "Path to pid file not valid: #{@pid_file}"
@@ -70,7 +71,7 @@ module GoldenBrindle
       end
 
       def bundler_cmd
-        cmd = "bundle exec #{@opt.program_name}"
+        cmd = "bundle exec #{@opt.program_name} start"
         @original_args.each_slice(2) do |arg_key,value|
           cmd << " #{arg_key} #{value}" if arg_key != "-b"
         end
