@@ -5,7 +5,8 @@ module GoldenBrindle
       def configure
         options [
           ["-c", "--conf_path PATH", "Path to golden_brindle configuration files", :@cwd, "."],
-          ["-V", "", "Verbose output", :@verbose, false]
+          ["-V", "", "Verbose output", :@verbose, false],
+          ["-b", "", "Start server with bundler", :@bundler, false]
         ]
       end
 
@@ -22,7 +23,8 @@ module GoldenBrindle
         Dir.chdir @cwd do
           Dir.glob("**/*.{yml,conf}").each do |conf|
             cmd = "golden_brindle #{command} -C #{File.join(@cwd,conf)}"
-            cmd += " -d" if command == "start" #daemonize only when start
+            cmd << " -d true" if command == "start" #daemonize only when start
+            cmd << " -b true" if @bundler
             puts cmd if @verbose
             output = `#{cmd}`
             puts output if @verbose
